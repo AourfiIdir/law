@@ -1,42 +1,51 @@
 import mongoose from "mongoose"
 import bcrypt from "bcrypt";
 
-const UserSchema = mongoose.Schema({
-    nom:{
-        type:String,
-        required:true
+const UserSchema = new mongoose.Schema(
+  {
+    firebaseUid: {
+      type: String,
+      unique: true,
+      sparse: true, // allow users without firebaseUid (if you ever need them)
     },
-    prenom:{
-        type:String;
-        required:true
+    nom: {
+      type: String,
+      required: false,
     },
-    role:{
-        type:String,
-        enum : ["admin","user"]
+    prenom: {
+      type: String,
+      required: false,
     },
-    password:{
-        type:String,
-        minlength:[6,"Password must be at least 6 characters"];
-        select:false
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
-    email:{
-        type:String,
-        required :[true,"Email is required"],
-        unique:true
+    password: {
+      type: String,
+      minlength: [6, "Password must be at least 6 characters"],
+      select: false,
     },
-    wilaya:{
-        type:String,
-        enum:["Bejaia","Alger"]
-    }
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+    },
+    wilaya: {
+      type: String,
+      enum: ["Bejaia", "Alger"],
+    },
+  },
+  { timestamps: true }
+);
 
+UserSchema.pre("save", async function (next) {
+  if (this.isModified("password") && this.password) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
 });
 
-UserSchema.pre("save",async ()=>{
-    if(this.isModified("password")){
-        const saltRounds = 10;
-        this.password = await bcrypt.hash(this.password,saltRounds);
-    }       
-})
+export default mongoose.model("User", UserSchema);
 
-
-export default mongoose.model("User",UserSchema);
