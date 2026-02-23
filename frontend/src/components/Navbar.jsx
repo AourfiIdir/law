@@ -16,7 +16,10 @@ export default function Navbar() {
         </Link>
       </div>
       <nav className="navbar-center">
-        <Link to="/">Produits</Link>
+        <Link to="/">Accueil</Link>
+        <Link to="/produits">Produits</Link>
+        <Link to="/a-propos">À propos</Link>
+        <Link to="/contact">Contact</Link>
         {user && role === "user" && <Link to="/mes-biens">Mes biens</Link>}
         {user && role === "admin" && <Link to="/admin">Admin</Link>}
       </nav>
@@ -63,7 +66,19 @@ export default function Navbar() {
             </div>
             <div className="mobile-links">
               <Link to="/" onClick={close}>
+                Accueil
+              </Link>
+              <Link to="/produits" onClick={close}>
                 Produits
+              </Link>
+              <Link to="/a-propos" onClick={close}>
+                À propos
+              </Link>
+              <Link to="/comment-ca-marche" onClick={close}>
+                Comment ça marche
+              </Link>
+              <Link to="/contact" onClick={close}>
+                Contact
               </Link>
               {user && role === "user" && (
                 <Link to="/mes-biens" onClick={close}>
