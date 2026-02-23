@@ -2,3 +2,7 @@
 
 node_modules
 
+# Firebase service account key file (DO NOT COMMIT)
+firebase-service-account.json
+**/firebase-service-account.json
+

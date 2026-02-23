@@ -1,22 +1,29 @@
 import admin from "firebase-admin";
 import "dotenv/config";
+import fs from "node:fs";
 
 let app;
 
 export function getFirebaseAdmin() {
   if (!app) {
+    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
     const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
-    if (!serviceAccountJson) {
-      throw new Error(
-        "FIREBASE_SERVICE_ACCOUNT env var is not set. Put your Firebase service account JSON here."
-      );
-    }
 
     let serviceAccount;
     try {
-      serviceAccount = JSON.parse(serviceAccountJson);
+      if (serviceAccountPath) {
+        const raw = fs.readFileSync(serviceAccountPath, "utf8");
+        serviceAccount = JSON.parse(raw);
+      } else if (serviceAccountJson) {
+        // If you store it in .env, it MUST be a single-line JSON string.
+        serviceAccount = JSON.parse(serviceAccountJson);
+      } else {
+        throw new Error(
+          "Set FIREBASE_SERVICE_ACCOUNT_PATH (recommended) or FIREBASE_SERVICE_ACCOUNT (single-line JSON)."
+        );
+      }
     } catch (err) {
-      throw new Error("FIREBASE_SERVICE_ACCOUNT must be valid JSON: " + err.message);
+      throw new Error("Firebase service account is invalid: " + err.message);
     }
 
     app = admin.initializeApp({

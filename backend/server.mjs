@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import { connectDB } from "./connectDb.mjs";
 import biensRouter from "./routes/biens.mjs";
+import meRouter from "./routes/me.mjs";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/biens", biensRouter);
+app.use("/me", meRouter);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
