@@ -26,9 +26,10 @@ export default function Products() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>Produits disponibles</h1>
+        <h1>Biens visibles</h1>
         <p className="muted">
-          Consultez les offres acceptées par l&apos;administrateur.
+          Terrains, voitures, machines et autres biens validés par
+          l&apos;administrateur.
         </p>
       </div>
       {loading && <p>Chargement...</p>}
@@ -37,7 +38,15 @@ export default function Products() {
         {biens.map((bien) => (
           <article key={bien._id} className="card">
             <div className="card-image">
-              <img src={bien.imageUrl} alt={bien.name} />
+              <img
+                src={bien.imageUrl}
+                alt={bien.name}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src =
+                    "https://via.placeholder.com/400x240?text=Bien";
+                }}
+              />
               {bien.status === "sold" && (
                 <span className="badge badge-red">Vendu</span>
               )}
@@ -64,7 +73,8 @@ export default function Products() {
                 </p>
               )}
               <p className="muted small">
-                Pour plus d&apos;infos, appelez le magasin.
+                Pour plus d&apos;infos, appelez le numéro indiqué sur l&apos;annonce ou
+                contactez le responsable.
               </p>
             </div>
           </article>

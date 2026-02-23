@@ -17,8 +17,16 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (err) {
-      setError("Identifiants incorrects");
       console.error(err);
+      if (err.code === "auth/user-not-found") {
+        setError("Aucun compte trouvé avec cet e-mail.");
+      } else if (err.code === "auth/wrong-password") {
+        setError("Mot de passe incorrect.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Adresse e-mail invalide.");
+      } else {
+        setError("Connexion impossible. Vérifiez vos informations.");
+      }
     } finally {
       setLoading(false);
     }

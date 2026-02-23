@@ -56,9 +56,12 @@ export default function MyBiens() {
 
       <section className="section">
         <h2>Proposer un nouveau bien</h2>
+        <p className="muted small">
+          Exemple de biens : terrain, voiture, machine, local, etc.
+        </p>
         <form className="grid-form" onSubmit={handleSubmit}>
           <label>
-            Nom du produit
+            Titre du bien
             <input
               name="name"
               value={form.name}
@@ -67,16 +70,17 @@ export default function MyBiens() {
             />
           </label>
           <label>
-            Catégorie
+            Type de bien
             <input
               name="category"
               value={form.category}
               onChange={handleChange}
+              placeholder="Terrain, voiture, machine..."
               required
             />
           </label>
           <label className="full">
-            Description
+            Description (en mots simples)
             <textarea
               name="description"
               value={form.description}
@@ -85,11 +89,12 @@ export default function MyBiens() {
             />
           </label>
           <label className="full">
-            URL de l&apos;image
+            Photo du bien (lien d&apos;image)
             <input
               name="imageUrl"
               value={form.imageUrl}
               onChange={handleChange}
+              placeholder="https://exemple.com/ma-photo.jpg"
               required
             />
           </label>
@@ -110,7 +115,15 @@ export default function MyBiens() {
           {biens.map((bien) => (
             <article key={bien._id} className="card">
               <div className="card-image">
-                <img src={bien.imageUrl} alt={bien.name} />
+                <img
+                  src={bien.imageUrl}
+                  alt={bien.name}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      "https://via.placeholder.com/400x240?text=Bien";
+                  }}
+                />
                 <span className="badge">{bien.status}</span>
               </div>
               <div className="card-body">

@@ -23,7 +23,15 @@ export default function Signup() {
       navigate("/");
     } catch (err) {
       console.error(err);
-      setError("Impossible de créer le compte");
+      if (err.code === "auth/email-already-in-use") {
+        setError("Cette adresse e-mail est déjà utilisée.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Adresse e-mail invalide.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Mot de passe trop faible (6 caractères minimum).");
+      } else {
+        setError("Erreur d'inscription. Vérifiez vos informations.");
+      }
     } finally {
       setLoading(false);
     }
@@ -34,7 +42,7 @@ export default function Signup() {
       <div className="auth-card">
         <h1>Inscription</h1>
         <p className="auth-subtitle">
-          Créez un compte pour proposer vos produits à la vente.
+          Créez un compte pour proposer vos biens (terrain, voiture, machine…).
         </p>
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
